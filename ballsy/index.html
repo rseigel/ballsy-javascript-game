@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <link rel="stylesheet" type="text/css" href="css/game-layout.css"/>
+        <title>Ballsy | HTML5 Game</title>
+        <script src="../libraries/powerupjs/LAB.min.js"></script>
+        <script>
+
+            var powerupjsdir = '../libraries/powerupjs/';
+
+            $LAB
+                    .script(powerupjsdir + 'Math.js').wait()
+                    .script(powerupjsdir + 'IGameLoopObject.js').wait()
+                    .script(powerupjsdir + 'geom/Vector2.js').wait()
+                    .script(powerupjsdir + 'geom/Rectangle.js').wait()
+                    .script(powerupjsdir + 'Canvas2D.js').wait()
+                    .script(powerupjsdir + 'system/Color.js').wait()
+                    .script(powerupjsdir + 'system/Keys.js').wait()
+                    .script(powerupjsdir + 'input/ButtonState.js').wait()
+                    .script(powerupjsdir + 'input/Keyboard.js').wait()
+                    .script(powerupjsdir + 'input/Mouse.js').wait()
+                    .script(powerupjsdir + 'input/Touch.js').wait()
+                    .script(powerupjsdir + 'SpriteSheet.js').wait()
+                    .script(powerupjsdir + 'Sound.js').wait()
+                    .script(powerupjsdir + 'gameobjects/GameObject.js').wait()
+                    .script(powerupjsdir + 'gameobjects/GameObjectList.js').wait()
+                    .script(powerupjsdir + 'gameobjects/GameObjectGrid.js').wait()
+                    .script(powerupjsdir + 'gameobjects/SpriteGameObject.js').wait()
+                    .script(powerupjsdir + 'gui/Button.js').wait()
+                    .script(powerupjsdir + 'gui/Label.js').wait()
+                    .script(powerupjsdir + 'GameStateManager.js').wait()
+                    .script(powerupjsdir + 'Game.js').wait()
+
+                    .script('js/states/TitleMenuState.js').wait()
+                    .script('js/states/TutorialState.js').wait()
+                    .script('js/states/PlayingState.js').wait()
+                    .script('js/states/GameOverState.js').wait()
+                    .script('js/gameobjects/User.js').wait()
+                    .script('js/gameobjects/Wall.js').wait()
+                    .script('js/gameobjects/FrontWall.js').wait()
+                    .script('js/gameobjects/Enemy.js').wait()
+                    .script('js/gameobjects/PauseButton.js').wait()
+                    .script('js/gameobjects/ScoreGameObject.js').wait()
+                    .script('js/Ballsy.js').wait(function () {
+                        //Game.start('gameArea', 'mycanvas', 1440, 1080);
+                        powerupjs.Game.start('gameArea', 'mycanvas', 768, 1024);
+                    });
+
+        </script>
+    </head>
+
+<body>
+<div id="gameArea">
+    <canvas id="mycanvas">Your browser does not support any canvas tags</canvas>
+</div>
+</body>
+</html>

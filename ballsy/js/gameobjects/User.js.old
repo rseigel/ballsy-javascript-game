@@ -1,0 +1,115 @@
+"use strict";
+
+function User(layer, id) {
+	powerupjs.GameObject.call(this, layer, id);
+	this._maxRadius = 50;
+	this._minRadius = 25;
+	this.reset();
+}
+User.prototype = Object.create(powerupjs.GameObject.prototype);
+
+Object.defineProperty(User.prototype, "maxRadius",
+    {
+        get: function () {
+            return this._maxRadius;
+        }
+    });
+Object.defineProperty(User.prototype, "minRadius",
+	{
+		get: function () {
+			return this._minRadius;
+		}
+	});
+Object.defineProperty(User.prototype, "bounds",
+	{
+		get: function () {
+			return { left : this.position.x - this.radius,
+					 right : this.position.x + this.radius,
+					 top : this.position.y - this.radius,
+					 bottom : this.position.y + this.radius };
+		}
+	});
+
+User.prototype.handleInput = function(delta) {
+	if (powerupjs.Touch.isTouchDevice) {
+		this.handleInputTouch(delta);
+	} else {
+		this.handleInputMouse(delta);
+	}
+};
+
+User.prototype.handleInputTouch = function(delta) {
+	if (powerupjs.Touch.isTouching)
+		this.trigger(delta);
+	//if (powerupjs.Touch.touchRelease)
+	//	this.release();	
+};
+
+User.prototype.handleInputMouse = function(delta) {
+	if (powerupjs.Mouse.left.down)
+		this.trigger(delta);
+	//if (powerupjs.Mouse.left.up)
+	//	this.release();
+};
+
+User.prototype.reset = function() {
+	//this.fillColor = Color.orange;
+	this.fillColor = global.color;
+	this.strokeColor = 'none';
+	this.velocity = powerupjs.Vector2.zero;
+	this.position = new powerupjs.Vector2(200,powerupjs.Game.size.y / 2);
+
+	//old code
+	//this.radius = ( (this._maxRadius - this._minRadius) / 2 ) + this._minRadius;
+	//this.growthRate = 2; // Relative to delta
+	//this.projection = true;
+
+	this.radius = 50;
+	this.growthRate = 2;
+};
+
+User.prototype.trigger = function(delta) {
+	// Expand and contract object – old code
+	//this.radius += (this.growthRate * delta) * (this._maxRadius - this._minRadius);
+	//if (this.radius >= this._maxRadius || this.radius <= this._minRadius)
+	//	this.growthRate *= -1;
+
+	var computePosition = function(obj, delta) {
+		return obj.growthRate * delta * powerupjs.Game.size.y;
+	};
+
+	this.position.y += computePosition(this, delta);
+	if ( (this.position.y - this.radius <= 0) || 
+		 (this.position.y + this.radius >= powerupjs.Game.size.y) ) {
+		this.growthRate *= -1;
+		this.position.y += computePosition(this, delta);
+	}
+};
+
+User.prototype.release = function() {
+	// Move User object to y-location based on radius
+	sounds.ball.play();
+	this.position.y = this.computePosition();
+};
+
+User.prototype.computePosition = function() {
+	var relativeSize = ((this.radius - this._minRadius) / (this._maxRadius - this._minRadius));
+	var playableArea = powerupjs.Game.size.y - (this._maxRadius * 2);
+	return ( playableArea * (1 - relativeSize) ) + this._maxRadius;
+};
+
+User.prototype.draw = function() {
+	if (this.projection) {
+		powerupjs.Canvas2D.drawRectangle(0, this.computePosition(), 50, 10, powerupjs.Color.red);
+		//Canvas2D.drawCircle(this.position.x, this.computePosition(), this.radius, 
+		//	this.fillColor, this.strokeColor, 0.5);
+	}
+	powerupjs.Canvas2D.drawCircle(this.position.x, this.position.y, this.radius, 
+		this.fillColor, this.strokeColor);
+};
+
+User.prototype.dying = function() {
+	this.fillColor = powerupjs.Color.red;
+	this.velocity.y += 50;
+};
+
